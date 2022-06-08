@@ -1,18 +1,29 @@
-FROM python:3.10-slim as compile
+# STAGE 1 - Building Dependencies
+FROM condaforge/mambaforge-pypy3 AS build
 
+# installing build dependencies
 RUN apt-get update && apt-get upgrade -y
 RUN apt-get install -y build-essential gcc
 
-RUN python -m venv /opt/venv
-ENV PATH='/opt/venv/bin:$PATH'
+# creating the environment
+COPY environment-py39.yml .
+RUN mamba env create -f environment-py39.yml
 
-WORKDIR /usr/src/app
-COPY requirements.txt .
+# Installing Conda Pack
+RUN conda install -c conda-forge conda-pack
 
-RUN pip install --upgrade pip \
-    && pip install -r requirements.txt
+# Use conda-pack to create a standalone enviornment
+# in /venv:
+RUN conda-pack -n market-grpc-module -o /tmp/env.tar && \
+    mkdir /venv && cd /venv && tar xf /tmp/env.tar && \
+    rm /tmp/env.tar
 
-FROM python:3.10-slim as build
+# We've put venv in same path it'll be in final image,
+# so now fix up paths:
+RUN /venv/bin/conda-unpack
+
+# STAGE 2 - Running Code
+FROM python:3.10-slim as runtime
 
 # setup config
 ENV GROUP_ID=1000 \
@@ -21,18 +32,16 @@ ENV GROUP_ID=1000 \
 ENV PYTHONUNBUFFERED=1 \
     PYTHONIOENCODING=UTF-8
 
-COPY --from=compile /opt/venv /opt/venv
-ENV PATH='/opt/venv/bin:$PATH'
+COPY --from=build /venv /venv
 
 # Configuring app
 WORKDIR /app
 COPY . .
 
-ENV PYTHONPATH=ms_grpc/plibs
+ENV PYTHONPATH=ms_grpc/plibs:module
 
-EXPOSE 50051
+EXPOSE 50054
 
-CMD [ "python", "-u" , "server.py" ]
-
-# apt install libtbb, gfortran-12
-# SCIP install 7.0.3
+SHELL [ "/bin/bash", "-c" ]
+ENTRYPOINT source /venv/bin/activate && \
+    python -u server.py

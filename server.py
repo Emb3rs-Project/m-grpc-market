@@ -39,7 +39,6 @@ class MarketModule(MarketModuleServicer):
             Pn=json.dumps(output['Pn']),
             QoE=json.dumps(output['QoE']),
             optimal=str(output['optimal']),
-            plot_market_clearing=json.dumps(output['plot_market_clearing']),
             settlement=json.dumps(output['settlement']),
             social_welfare_h=json.dumps(output['social_welfare_h']),
             shadow_price=json.dumps(output['shadow_price']),
@@ -60,7 +59,6 @@ class MarketModule(MarketModuleServicer):
             Pn=json.dumps(output['Pn']),
             QoE=json.dumps(output['QoE']),
             optimal=str(output['optimal']),
-            plot_market_clearing=json.dumps(output['plot_market_clearing']),
             settlement=json.dumps(output['settlement']),
             social_welfare_h=json.dumps(output['social_welfare_h']),
             shadow_price=json.dumps(output['shadow_price']),
@@ -87,12 +85,11 @@ class MarketModule(MarketModuleServicer):
             Pn=json.dumps(output['Pn']),
             QoE=json.dumps(output['QoE']),
             optimal=str(output['optimal']),
-            plot_market_clearing=json.dumps(output['plot_market_clearing']),
             settlement=json.dumps(output['settlement']),
             social_welfare_h=json.dumps(output['social_welfare_h']),
             shadow_price=json.dumps(output['shadow_price']),
             Tnm=json.dumps(output['Tnm']),
-            agent_operational_cost=json.dumps(output['agent_operational_cost']),
+            # agent_operational_cost=json.dumps(output['agent_operational_cost']),
         )
 
     def RunShortTermMarketDirect(self, request: MarketInput, context) -> ShortTermMarketResponse:
@@ -106,12 +103,11 @@ class MarketModule(MarketModuleServicer):
             Pn=json.dumps(output['Pn']),
             QoE=json.dumps(output['QoE']),
             optimal=str(output['optimal']),
-            plot_market_clearing=json.dumps(output['plot_market_clearing']),
             settlement=json.dumps(output['settlement']),
             social_welfare_h=json.dumps(output['social_welfare_h']),
             shadow_price=json.dumps(output['shadow_price']),
             Tnm=json.dumps(output['Tnm']),
-            agent_operational_cost=json.dumps(output['agent_operational_cost']),
+            # agent_operational_cost=json.dumps(output['agent_operational_cost']),
         )
 
     
