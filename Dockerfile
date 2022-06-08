@@ -1,16 +1,11 @@
-# STAGE 1 - Building Dependencies
-FROM condaforge/mambaforge-pypy3 AS build
-
-# installing build dependencies
-RUN apt-get update && apt-get upgrade -y
-RUN apt-get install -y build-essential gcc
+FROM embers-base as build
 
 # creating the environment
 COPY environment-py39.yml .
-RUN mamba env create -f environment-py39.yml
+RUN --mount=type=cache,target=/opt/conda/pkgs mamba env create -f environment-py39.yml
 
 # Installing Conda Pack
-RUN conda install -c conda-forge conda-pack
+RUN --mount=type=cache,target=/opt/conda/pkgs conda install -c conda-forge conda-pack
 
 # Use conda-pack to create a standalone enviornment
 # in /venv:
