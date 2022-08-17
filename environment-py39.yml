@@ -3,7 +3,6 @@ channels:
   - defaults
   - conda-forge
 dependencies:
-  - python-dotenv=
   - colorama=
   - cvxpy=
   - matplotlib=
@@ -50,4 +49,6 @@ dependencies:
     - multidict==6.0.2
     - protobuf==3.20.1
     - python-dateutil==2.8.2
+    - python-dotenv==0.20.0
     - six==1.16.0
+    - gurobipy==9.5.1
