@@ -12,6 +12,7 @@ from module.market_module.long_term.market_functions.run_longterm_market import 
 from module.market_module.long_term.market_functions.convert_user_and_module_inputs import (
     convert_user_and_module_inputs as long_convert
 )
+from module.market_module.long_term.report.report_long_term import report_long_term
 from module.market_module.short_term.market_functions.run_shortterm_market import run_shortterm_market
 from module.market_module.short_term.market_functions.convert_user_and_module_inputs import (
     convert_user_and_module_inputs as short_convert
@@ -30,6 +31,7 @@ class MarketModule(MarketModuleServicer):
         }
         input_dict = long_convert(in_var)
         output = run_longterm_market(input_dict=input_dict)
+        report = report_long_term(longterm_results=output, data_profile=in_var["user"]["data_profile"])
         return LongTermMarketResponse(
             Gn=json.dumps(output['Gn']),
             Ln=json.dumps(output['Ln']),
@@ -43,6 +45,7 @@ class MarketModule(MarketModuleServicer):
             agent_operational_cost=json.dumps(output['agent_operational_cost']),
             SPM=json.dumps(output['SPM']),
             ADG=json.dumps(output['ADG']),
+            report=report,
         )
 
     def RunLongTermMarketDirect(self, request: MarketInput, context) -> LongTermMarketResponse:
