@@ -106,7 +106,10 @@ class MarketModule(MarketModuleServicer):
 
 
 def serve():
-    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
+    server = grpc.server(
+        futures.ThreadPoolExecutor(max_workers=10),
+        options=[('grpc.max_send_message_length', -1), ('grpc.max_receive_message_length', -1)],
+    )
     add_MarketModuleServicer_to_server(MarketModule(), server)
 
     server.add_insecure_port(f"{os.getenv('GRPC_HOST')}:{os.getenv('GRPC_PORT')}")
