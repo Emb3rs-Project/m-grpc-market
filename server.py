@@ -5,7 +5,6 @@ from concurrent import futures
 import dotenv
 import grpc
 import jsonpickle
-
 from market.market_pb2 import LongTermMarketResponse, MarketInput, MarketInputRequest, ShortTermMarketResponse
 from market.market_pb2_grpc import MarketModuleServicer, add_MarketModuleServicer_to_server
 from module.market_module.long_term.market_functions.run_longterm_market import run_longterm_market
@@ -17,6 +16,8 @@ from module.market_module.short_term.market_functions.run_shortterm_market impor
 from module.market_module.short_term.market_functions.convert_user_and_module_inputs import (
     convert_user_and_module_inputs as short_convert
 )
+
+from helpers import NumpyJsonEncode
 
 dotenv.load_dotenv()
 
@@ -99,7 +100,7 @@ class MarketModule(MarketModuleServicer):
             optimal=str(output['optimal']),
             settlement=json.dumps(output['settlement']),
             social_welfare_h=json.dumps(output['social_welfare_h']),
-            shadow_price=json.dumps(output['shadow_price']),
+            shadow_price=json.dumps(output['shadow_price'], cls=NumpyJsonEncode),
             Tnm=json.dumps(output['Tnm']),
             # agent_operational_cost=json.dumps(output['agent_operational_cost']),
         )
