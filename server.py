@@ -36,7 +36,13 @@ class MarketModule(MarketModuleServicer):
         with SimulationWrapper(project_path=PROJECT_PATH):
             input_dict = long_convert(in_var)
             output = run_longterm_market(input_dict=input_dict)
-            report = report_long_term(longterm_results=output, data_profile=in_var["user"]["data_profile"])
+            report = report_long_term(
+                longterm_results=output,
+                data_profile=in_var["user"]["data_profile"],
+                fbp_time=input_dict["fbp_time"],
+                fbp_agent=input_dict["fbp_agent"],
+                md=input_dict['md'],
+            )
         return LongTermMarketResponse(
             Gn=json.dumps(output['Gn']),
             Ln=json.dumps(output['Ln']),
