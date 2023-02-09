@@ -1,10 +1,12 @@
 import json
 import os
 from concurrent import futures
+from pathlib import Path
 
 import dotenv
 import grpc
 import jsonpickle
+from base.wrappers import SimulationWrapper
 from market.market_pb2 import LongTermMarketResponse, MarketInput, MarketInputRequest, ShortTermMarketResponse
 from market.market_pb2_grpc import MarketModuleServicer, add_MarketModuleServicer_to_server
 from module.market_module.long_term.market_functions.run_longterm_market import run_longterm_market
@@ -20,6 +22,7 @@ from module.market_module.short_term.market_functions.convert_user_and_module_in
 from helpers import NumpyJsonEncode
 
 dotenv.load_dotenv()
+PROJECT_PATH = str(Path.cwd().parent)
 
 
 class MarketModule(MarketModuleServicer):
@@ -30,9 +33,10 @@ class MarketModule(MarketModuleServicer):
             "cf-module": jsonpickle.decode(request.cf_module),
             "teo-module": jsonpickle.decode(request.teo_module)
         }
-        input_dict = long_convert(in_var)
-        output = run_longterm_market(input_dict=input_dict)
-        report = report_long_term(longterm_results=output, data_profile=in_var["user"]["data_profile"])
+        with SimulationWrapper(project_path=PROJECT_PATH):
+            input_dict = long_convert(in_var)
+            output = run_longterm_market(input_dict=input_dict)
+            report = report_long_term(longterm_results=output, data_profile=in_var["user"]["data_profile"])
         return LongTermMarketResponse(
             Gn=json.dumps(output['Gn']),
             Ln=json.dumps(output['Ln']),
@@ -51,7 +55,8 @@ class MarketModule(MarketModuleServicer):
 
     def RunLongTermMarketDirect(self, request: MarketInput, context) -> LongTermMarketResponse:
         input_dict = jsonpickle.decode(request.input)
-        output = run_longterm_market(input_dict=input_dict)
+        with SimulationWrapper(project_path=PROJECT_PATH):
+            output = run_longterm_market(input_dict=input_dict)
         return LongTermMarketResponse(
             Gn=json.dumps(output['Gn']),
             Ln=json.dumps(output['Ln']),
@@ -74,8 +79,9 @@ class MarketModule(MarketModuleServicer):
             "cf-module": jsonpickle.decode(request.cf_module),
             "teo-module": jsonpickle.decode(request.teo_module)
         }
-        input_dict = short_convert(in_var)
-        output = run_shortterm_market(input_dict)
+        with SimulationWrapper(project_path=PROJECT_PATH):
+            input_dict = short_convert(in_var)
+            output = run_shortterm_market(input_dict)
         return ShortTermMarketResponse(
             Gn=json.dumps(output['Gn']),
             Ln=json.dumps(output['Ln']),
@@ -91,7 +97,8 @@ class MarketModule(MarketModuleServicer):
 
     def RunShortTermMarketDirect(self, request: MarketInput, context) -> ShortTermMarketResponse:
         input_dict = jsonpickle.decode(request.input)
-        output = run_shortterm_market(input_dict)
+        with SimulationWrapper(project_path=PROJECT_PATH):
+            output = run_shortterm_market(input_dict)
         return ShortTermMarketResponse(
             Gn=json.dumps(output['Gn']),
             Ln=json.dumps(output['Ln']),
