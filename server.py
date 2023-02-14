@@ -22,7 +22,7 @@ from module.market_module.short_term.market_functions.convert_user_and_module_in
 from helpers import NumpyJsonEncode
 
 dotenv.load_dotenv()
-PROJECT_PATH = str(Path.cwd().parent)
+PROJECT_PATH = str(Path.cwd())
 
 
 class MarketModule(MarketModuleServicer):
@@ -39,9 +39,10 @@ class MarketModule(MarketModuleServicer):
             report = report_long_term(
                 longterm_results=output,
                 data_profile=in_var["user"]["data_profile"],
-                fbp_time=input_dict["fbp_time"],
-                fbp_agent=input_dict["fbp_agent"],
-                md=input_dict['md'],
+                fbp_time=in_var["user"]["fbp_time"],
+                fbp_agent=in_var["user"]["fbp_agent"],
+                md=in_var["user"]['md'],
+                agent_ids_to_report=input_dict["agent_ids_to_report"],
             )
         return LongTermMarketResponse(
             Gn=json.dumps(output['Gn']),
