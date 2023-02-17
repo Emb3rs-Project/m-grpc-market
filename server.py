@@ -1,6 +1,7 @@
 import json
 import os
 from concurrent import futures
+from copy import deepcopy
 from pathlib import Path
 
 import dotenv
@@ -37,7 +38,7 @@ class MarketModule(MarketModuleServicer):
             input_dict = long_convert(in_var)
             output = run_longterm_market(input_dict=input_dict)
             report = report_long_term(
-                longterm_results=output,
+                longterm_results=deepcopy(output),
                 data_profile=in_var["user"]["data_profile"],
                 fbp_time=in_var["user"]["fbp_time"],
                 fbp_agent=in_var["user"]["fbp_agent"],
@@ -122,7 +123,7 @@ class MarketModule(MarketModuleServicer):
 
 def serve():
     server = grpc.server(
-        futures.ThreadPoolExecutor(max_workers=10),
+        futures.ThreadPoolExecutor(max_workers=100),
         options=[('grpc.max_send_message_length', -1), ('grpc.max_receive_message_length', -1)],
     )
     add_MarketModuleServicer_to_server(MarketModule(), server)
