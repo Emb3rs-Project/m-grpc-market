@@ -6,7 +6,7 @@ dependencies:
   - python=3.9
   - pip=
   - colorama=
-  - cvxpy=1.2.2
+  - cvxpy=1.1.17
   - matplotlib=
   - pyscipopt=4.2.0
   - scipy=1.9.3
