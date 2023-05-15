@@ -5,21 +5,21 @@ channels:
 dependencies:
   - python=3.9
   - pip=
-  - colorama=
-  - cvxpy=1.1.17
-  - matplotlib=
-  - pyscipopt=4.2.0
-  - scipy=1.9.3
-  - jinja2=
-  - jsonpickle=
-  - numpy=
-  - pandas=
-  - mpld3=
-  - pydantic=
+  - colorama=0.*
+  - cvxpy=1.*
+  - matplotlib=3.*
+  - pyscipopt=4.2.*
+  - scipy=1.*
+  - jinja2=3.*
+  - jsonpickle=3.*
+  - numpy=1.*
+  - pandas=1.*
+  - mpld3=0.*
+  - pydantic=1.*
   - pip:
     - grpcio==1.44.0
     - protobuf==3.20.1
     - gurobipy==9.5.1
-    - python-dateutil
-    - python-dotenv
-    - coptpy
+    - python-dateutil==2.8.2
+    - python-dotenv==0.20.0
+    - coptpy==6.5.1

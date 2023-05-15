@@ -39,10 +39,10 @@ class MarketModule(MarketModuleServicer):
             output = run_longterm_market(input_dict=input_dict)
             report = report_long_term(
                 longterm_results=deepcopy(output),
-                data_profile=in_var["user"]["data_profile"],
-                fbp_time=in_var["user"]["fbp_time"],
-                fbp_agent=in_var["user"]["fbp_agent"],
-                md=in_var["user"]['md'],
+                data_profile=input_dict["data_profile"],
+                fbp_time=input_dict["fbp_time"],
+                fbp_agent=input_dict["fbp_agent"],
+                md=input_dict['md'],
                 agent_ids_to_report=input_dict["agent_ids_to_report"],
             )
         return LongTermMarketResponse(
@@ -100,7 +100,6 @@ class MarketModule(MarketModuleServicer):
             social_welfare_h=json.dumps(output['social_welfare_h']),
             shadow_price=json.dumps(output['shadow_price']),
             Tnm=json.dumps(output['Tnm']),
-            # agent_operational_cost=json.dumps(output['agent_operational_cost']),
         )
 
     def RunShortTermMarketDirect(self, request: MarketInput, context) -> ShortTermMarketResponse:
@@ -117,13 +116,12 @@ class MarketModule(MarketModuleServicer):
             social_welfare_h=json.dumps(output['social_welfare_h']),
             shadow_price=json.dumps(output['shadow_price'], cls=NumpyJsonEncode),
             Tnm=json.dumps(output['Tnm']),
-            # agent_operational_cost=json.dumps(output['agent_operational_cost']),
         )
 
 
 def serve():
     server = grpc.server(
-        futures.ThreadPoolExecutor(max_workers=100),
+        futures.ThreadPoolExecutor(max_workers=10),
         options=[('grpc.max_send_message_length', -1), ('grpc.max_receive_message_length', -1)],
     )
     add_MarketModuleServicer_to_server(MarketModule(), server)
